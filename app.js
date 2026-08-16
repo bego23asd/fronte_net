@@ -1,4 +1,6 @@
-const API_URL = (window.API_URL || "").replace(/\/+$/, "");
+// Backend base URL (no trailing slash) - ang iyong live na Render backend.
+// Maaari mo ring ma-override ito sa pamamagitan ng window.API_URL sa config.js.
+const API_URL = (window.API_URL || "https://netflix-trial-backend-u2dh.onrender.com").replace(/\/+$/, "");
 
 const form = document.getElementById("trial-form");
 const emailInput = document.getElementById("email");
@@ -18,11 +20,6 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  if (!API_URL || API_URL === "https://netflix-trial-backend-u2dh.onrender.com") {
-    setStatus("Backend URL not configured yet. Open /config.js and set window.API_URL.", "err");
-    return;
-  }
-
   const submitBtn = form.querySelector("button");
   submitBtn.disabled = true;
   setStatus("Sending...");
@@ -37,7 +34,7 @@ form.addEventListener("submit", async (event) => {
     setStatus(data.message, data.ok ? "ok" : "err");
   } catch (err) {
     setStatus(
-      "Failed to reach the backend at " + API_URL + ". Check that (1) config.js has your correct Render URL (no trailing slash), (2) you can open " + API_URL + "/healthz and see {\"status\":\"ok\"}, and (3) the backend is not sleeping (Render free plan) or still building.",
+      "Failed to reach the backend at " + API_URL + ". Verify that (1) you can open " + API_URL + "/healthz and see {\"status\":\"ok\"}, (2) the backend is not sleeping (Render free plan) or still building, and (3) there is no mix of http/https.",
       "err"
     );
   } finally {
