@@ -1,0 +1,124 @@
+:root {
+  --bg: #141414;
+  --card: #ffffff;
+  --accent: #e50914;
+  --accent-dark: #b00610;
+  --text: #222;
+  --muted: #737373;
+  --ok: #1db954;
+  --err: #e50914;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  padding: 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  color: var(--text);
+}
+
+.sub {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+input[type="email"] {
+  padding: 0.75rem 0.9rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+input[type="email"]:focus {
+  border-color: var(--accent);
+}
+
+button {
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--accent-dark);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 1.25rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.status.hidden {
+  display: none;
+}
+
+.status.ok {
+  background: #d1f2dc;
+  color: var(--ok);
+}
+
+.status.err {
+  background: #fbdcdd;
+  color: var(--err);
+}
+
+.status.pending {
+  background: #f4f4f4;
+  color: var(--muted);
+}
