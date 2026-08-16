@@ -1,5 +1,3 @@
-// Backend base URL (no trailing slash) - ang iyong live na Render backend.
-// Maaari mo ring ma-override ito sa pamamagitan ng window.API_URL sa config.js.
 const API_URL = (window.API_URL || "https://netflix-trial-backend-u2dh.onrender.com").replace(/\/+$/, "");
 
 const form = document.getElementById("trial-form");
