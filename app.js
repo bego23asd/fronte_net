@@ -1,41 +1,43 @@
-const API_URL = (window.API_URL || "https://netflix-trial-backend-u2dh.onrender.com").replace(/\/+$/, "");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Trial Sender</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="bg"></div>
 
-const form = document.getElementById("trial-form");
-const emailInput = document.getElementById("email");
-const statusEl = document.getElementById("status");
+  <main class="card">
+    <div class="logo" aria-hidden="true">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
 
-function setStatus(message, kind) {
-  statusEl.textContent = message;
-  statusEl.className = "status " + (kind || "pending");
-}
+    <h1>Netflix <span>Trial</span> Sender</h1>
+    <p class="sub">Enter an email address to start the 30-day trial flow.</p>
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+    <form id="trial-form" autocomplete="off">
+      <label class="field">
+        <span class="label">Email address</span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          required>
+      </label>
+      <button type="submit">Send Trial</button>
+    </form>
 
-  const email = emailInput.value.trim();
-  if (!email) {
-    setStatus("Please enter an email address.", "err");
-    return;
-  }
+    <footer class="credit">Created by <span>Lyco</span></footer>
 
-  const submitBtn = form.querySelector("button");
-  submitBtn.disabled = true;
-  setStatus("Sending...", "pending");
+    <div id="status" class="status hidden"></div>
+  </main>
 
-  try {
-    const res = await fetch(`${API_URL}/api/send`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    const data = await res.json();
-    setStatus(data.message, data.ok ? "ok" : "err");
-  } catch (err) {
-    setStatus(
-      "Failed to reach the backend at " + API_URL + ". Verify that (1) you can open " + API_URL + "/healthz and see {\"status\":\"ok\"}, (2) the backend is not sleeping (Render free plan) or still building, and (3) there is no mix of http/https.",
-      "err"
-    );
-  } finally {
-    submitBtn.disabled = false;
-  }
-});
+  <script src="/config.js"></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
