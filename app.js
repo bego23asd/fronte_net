@@ -1,238 +1,43 @@
-:root {
-  --bg-1: #0b0b0f;
-  --bg-2: #1a0b0e;
-  --accent: #e50914;
-  --accent-2: #ff4d4d;
-  --card: rgba(24, 20, 22, 0.72);
-  --card-border: rgba(255, 255, 255, 0.09);
-  --ink: #f5f5f5;
-  --muted: #a6a6a6;
-  --ok: #34d97b;
-  --err: #ff5b65;
-  --ok-bg: rgba(52, 217, 123, 0.12);
-  --err-bg: rgba(255, 91, 101, 0.14);
+// Backend base URL (no trailing slash) - ang iyong live na Render backend.
+// Maaari mo ring ma-override ito sa pamamagitan ng window.API_URL sa config.js.
+const API_URL = (window.API_URL || "https://netflix-trial-backend-u2dh.onrender.com").replace(/\/+$/, "");
+
+const form = document.getElementById("trial-form");
+const emailInput = document.getElementById("email");
+const statusEl = document.getElementById("status");
+
+function setStatus(message, kind) {
+  statusEl.textContent = message;
+  statusEl.className = "status " + (kind || "pending");
 }
 
-* {
-  box-sizing: border-box;
-}
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-}
-
-body {
-  min-height: 100vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1.2rem;
-  font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
-  color: var(--ink);
-  background: radial-gradient(1200px 700px at 20% 0%, #2a1416 0%, transparent 60%),
-    radial-gradient(1000px 700px at 90% 100%, #1c1020 0%, transparent 55%),
-    linear-gradient(160deg, var(--bg-2), var(--bg-1));
-  overflow-x: hidden;
-}
-
-.bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 120%, rgba(229, 9, 20, 0.35), transparent 55%),
-    radial-gradient(circle at 10% 10%, rgba(229, 9, 20, 0.16), transparent 40%);
-  filter: blur(10px);
-}
-
-.card {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 420px;
-  padding: 2.1rem 2rem 1.9rem;
-  border-radius: 24px;
-  border: 1px solid var(--card-border);
-  background: var(--card);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
-  backdrop-filter: blur(22px) saturate(140%);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  animation: rise 0.5s ease-out both;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
+  const email = emailInput.value.trim();
+  if (!email) {
+    setStatus("Please enter an email address.", "err");
+    return;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  const submitBtn = form.querySelector("button");
+  submitBtn.disabled = true;
+  setStatus("Sending...", "pending");
+
+  try {
+    const res = await fetch(`${API_URL}/api/send`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    setStatus(data.message, data.ok ? "ok" : "err");
+  } catch (err) {
+    setStatus(
+      "Failed to reach the backend at " + API_URL + ". Verify that (1) you can open " + API_URL + "/healthz and see {\"status\":\"ok\"}, (2) the backend is not sleeping (Render free plan) or still building, and (3) there is no mix of http/https.",
+      "err"
+    );
+  } finally {
+    submitBtn.disabled = false;
   }
-}
-
-.logo {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 1.4rem;
-}
-
-.dot {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 14px rgba(229, 9, 20, 0.7);
-}
-
-h1 {
-  margin: 0 0 0.35rem;
-  font-size: 1.65rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-h1 span {
-  background: linear-gradient(120deg, #ff7a7a, #e50914);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-.sub {
-  margin: 0 0 1.6rem;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-input[type="email"] {
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
-  color: var(--ink);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-input[type="email"]::placeholder {
-  color: rgba(255, 255, 255, 0.32);
-}
-
-input[type="email"]:focus {
-  border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.18);
-}
-
-button {
-  padding: 0.9rem 1rem;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--accent), #ff2f3d);
-  box-shadow: 0 10px 26px rgba(229, 9, 20, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgba(229, 9, 20, 0.45);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.status {
-  margin-top: 1.3rem;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  line-height: 1.45;
-  display: none;
-}
-
-.status.pending {
-  display: block;
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--muted);
-}
-
-.status.ok {
-  display: block;
-  background: var(--ok-bg);
-  color: var(--ok);
-  border: 1px solid rgba(52, 217, 123, 0.3);
-}
-
-.status.err {
-  display: block;
-  background: var(--err-bg);
-  color: var(--err);
-  border: 1px solid rgba(255, 91, 101, 0.3);
-}
-
-.credit {
-  margin-top: 1.35rem;
-  text-align: center;
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 0.02em;
-}
-
-.credit span {
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(120deg, #ff7a7a, #e50914);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@media (max-width: 480px) {
-  .card {
-    padding: 1.7rem 1.4rem 1.5rem;
-  }
-  h1 {
-    font-size: 1.45rem;
-  }
-}
+});
