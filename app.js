@@ -22,7 +22,7 @@ form.addEventListener("submit", async (event) => {
 
   const submitBtn = form.querySelector("button");
   submitBtn.disabled = true;
-  setStatus("Sending...");
+  setStatus("Sending...", "pending");
 
   try {
     const res = await fetch(`${API_URL}/api/send`, {
