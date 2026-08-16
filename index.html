@@ -32,6 +32,29 @@
       <button type="submit">Send Trial</button>
     </form>
 
+    <div class="cookie-editor">
+      <div class="editor-head" id="editor-toggle" role="button" tabindex="0">
+        <span class="label">Cookie editor <span class="chevron" id="editor-chevron">▸</span></span>
+        <span class="editor-hint">inject nfvdid</span>
+      </div>
+      <div class="editor-body" id="editor-body">
+        <p class="editor-info">
+          I-paste ang cookie dito — pwede iyong buong JSON export (gaya ng
+          EditThisCookie), ang Cookie header line, o ang bare <code>nfvdid</code>
+          value. Gagamitin ito nang eksakto sa bawat request.
+        </p>
+        <textarea
+          id="cookie-input"
+          rows="4"
+          spellcheck="false"
+          placeholder='[{"name":"nfvdid","value":"BQF...%3D%3D"}]&#10;o kaya: nfvdid=BQF...; flwssn=xxx'></textarea>
+        <div class="editor-actions">
+          <button type="button" id="cookie-clear" class="ghost">Clear</button>
+          <span class="editor-status" id="cookie-preview"></span>
+        </div>
+      </div>
+    </div>
+
     <footer class="credit">Created by <span>Lyco</span></footer>
 
     <div id="status" class="status hidden"></div>
