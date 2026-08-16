@@ -212,11 +212,10 @@ button:disabled {
 }
 
 .credit {
-  position: fixed;
-  bottom: 1.1rem;
-  z-index: 2;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.45);
+  margin-top: 1.35rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
   letter-spacing: 0.02em;
 }
 
